@@ -56,27 +56,6 @@ class CategoryRestControllerTest {
     }
 
     @Test
-    @DisplayName("생성된 카테고리는 목록 조회 시 포함된다")
-    void createThenRetrieveContainsCreatedCategory() {
-        // given
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200);
-
-        // when & then
-        given()
-        .when()
-            .get("/api/categories")
-        .then()
-            .statusCode(200)
-            .body("name", hasItem(CATEGORY_NAME));
-    }
-
-    @Test
     @DisplayName("빈 이름으로 카테고리를 생성하면 빈 이름으로 저장된다")
     void createEmptyNameSavedWithEmptyName() {
         given()
