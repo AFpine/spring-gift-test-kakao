@@ -9,12 +9,8 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 
 public class ScenarioHooks {
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private WishRepository wishRepository;
@@ -33,7 +29,7 @@ public class ScenarioHooks {
 
     @Before
     public void setUp() {
-        RestAssured.port = port;
+        RestAssured.port = 28080;
     }
 
     @After
