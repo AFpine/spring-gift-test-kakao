@@ -23,6 +23,8 @@ import static org.hamcrest.Matchers.notNullValue;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductRestControllerTest {
 
+    private static final String CATEGORY_NAME = "교환권";
+
     @LocalServerPort
     private int port;
 
@@ -49,7 +51,7 @@ class ProductRestControllerTest {
         // given: 카테고리 생성
         int categoryId = given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "교환권"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()
@@ -74,7 +76,7 @@ class ProductRestControllerTest {
             .body("price", equalTo(4500))
             .body("imageUrl", equalTo("https://example.com/coffee.jpg"))
             .body("category.id", equalTo(categoryId))
-            .body("category.name", equalTo("교환권"));
+            .body("category.name", equalTo(CATEGORY_NAME));
     }
 
     @Test
@@ -83,7 +85,7 @@ class ProductRestControllerTest {
         // given: 카테고리 1개 + 상품 2개 생성
         int categoryId = given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "교환권"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()

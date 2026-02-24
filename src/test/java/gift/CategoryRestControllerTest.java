@@ -23,6 +23,8 @@ import static org.hamcrest.Matchers.nullValue;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CategoryRestControllerTest {
 
+    private static final String CATEGORY_NAME = "식품";
+
     @LocalServerPort
     private int port;
 
@@ -44,13 +46,13 @@ class CategoryRestControllerTest {
     void createValidNameReturnsCreatedCategory() {
         given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "식품"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()
             .statusCode(200)
             .body("id", notNullValue())
-            .body("name", equalTo("식품"));
+            .body("name", equalTo(CATEGORY_NAME));
     }
 
     @Test
@@ -59,7 +61,7 @@ class CategoryRestControllerTest {
         // given
         given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "식품"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()
@@ -71,7 +73,7 @@ class CategoryRestControllerTest {
             .get("/api/categories")
         .then()
             .statusCode(200)
-            .body("name", hasItem("식품"));
+            .body("name", hasItem(CATEGORY_NAME));
     }
 
     @Test
@@ -139,7 +141,7 @@ class CategoryRestControllerTest {
         // given
         given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "식품"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()
@@ -148,7 +150,7 @@ class CategoryRestControllerTest {
         // when
         given()
             .contentType(ContentType.JSON)
-            .body(Map.of("name", "식품"))
+            .body(Map.of("name", CATEGORY_NAME))
         .when()
             .post("/api/categories")
         .then()

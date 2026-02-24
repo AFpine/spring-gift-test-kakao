@@ -31,6 +31,8 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class GiftRestControllerTest {
 
+    private static final String GIFT_MESSAGE = "생일 축하해!";
+
     @LocalServerPort
     private int port;
 
@@ -83,7 +85,7 @@ class GiftRestControllerTest {
                 "optionId", option.getId(),
                 "quantity", 3,
                 "receiverId", 2L,
-                "message", "생일 축하해!"
+                "message", GIFT_MESSAGE
             ))
         .when()
             .post("/api/gifts")
@@ -106,7 +108,7 @@ class GiftRestControllerTest {
                 "optionId", 9999L,
                 "quantity", 3,
                 "receiverId", 2L,
-                "message", "생일 축하해!"
+                "message", GIFT_MESSAGE
             ))
         .when()
             .post("/api/gifts")
@@ -124,7 +126,7 @@ class GiftRestControllerTest {
                 "optionId", option.getId(),
                 "quantity", 15,
                 "receiverId", 2L,
-                "message", "생일 축하해!"
+                "message", GIFT_MESSAGE
             ))
         .when()
             .post("/api/gifts")
@@ -145,7 +147,7 @@ class GiftRestControllerTest {
                 "optionId", option.getId(),
                 "quantity", 3,
                 "receiverId", 2L,
-                "message", "생일 축하해!"
+                "message", GIFT_MESSAGE
             ))
         .when()
             .post("/api/gifts")
@@ -164,7 +166,7 @@ class GiftRestControllerTest {
                 "optionId", option.getId(),
                 "quantity", 10,
                 "receiverId", 2L,
-                "message", "생일 축하해!"
+                "message", GIFT_MESSAGE
             ))
         .when()
             .post("/api/gifts")
