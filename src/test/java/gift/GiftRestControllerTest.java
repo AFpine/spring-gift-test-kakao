@@ -74,7 +74,7 @@ class GiftRestControllerTest {
 
     @Test
     @DisplayName("유효한 요청으로 선물을 보내면 200 OK와 재고가 차감된다")
-    void give_validRequest_returnsOkAndDecreasesStock() {
+    void giveValidRequestReturnsOkAndDecreasesStock() {
         // when
         given()
             .contentType(ContentType.JSON)
@@ -98,7 +98,7 @@ class GiftRestControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 옵션으로 선물을 보내면 500 에러가 발생한다")
-    void give_nonExistentOption_returns500() {
+    void giveNonExistentOptionReturns500() {
         given()
             .contentType(ContentType.JSON)
             .header("Member-Id", sender.getId())
@@ -116,7 +116,7 @@ class GiftRestControllerTest {
 
     @Test
     @DisplayName("재고보다 많은 수량을 요청하면 500 에러가 발생한다")
-    void give_insufficientStock_returns500() {
+    void giveInsufficientStockReturns500() {
         given()
             .contentType(ContentType.JSON)
             .header("Member-Id", sender.getId())
@@ -138,7 +138,7 @@ class GiftRestControllerTest {
 
     @Test
     @DisplayName("Member-Id 헤더가 없으면 400 에러가 발생한다")
-    void give_missingMemberIdHeader_returns400() {
+    void giveMissingMemberIdHeaderReturns400() {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of(
@@ -155,7 +155,7 @@ class GiftRestControllerTest {
 
     @Test
     @DisplayName("재고와 동일한 수량을 요청하면 200 OK와 재고가 0이 된다")
-    void give_exactStock_returnsOkAndStockBecomesZero() {
+    void giveExactStockReturnsOkAndStockBecomesZero() {
         // when
         given()
             .contentType(ContentType.JSON)

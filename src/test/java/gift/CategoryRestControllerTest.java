@@ -41,7 +41,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("유효한 이름으로 카테고리를 생성하면 200 OK와 생성된 카테고리를 반환한다")
-    void create_validName_returnsCreatedCategory() {
+    void createValidNameReturnsCreatedCategory() {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of("name", "식품"))
@@ -55,7 +55,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("생성된 카테고리는 목록 조회 시 포함된다")
-    void create_thenRetrieve_containsCreatedCategory() {
+    void createThenRetrieveContainsCreatedCategory() {
         // given
         given()
             .contentType(ContentType.JSON)
@@ -76,7 +76,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("빈 이름으로 카테고리를 생성하면 빈 이름으로 저장된다")
-    void create_emptyName_savedWithEmptyName() {
+    void createEmptyNameSavedWithEmptyName() {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of("name", ""))
@@ -90,7 +90,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("name 필드 누락 시 null로 저장된다")
-    void create_missingName_savedWithNull() {
+    void createMissingNameSavedWithNull() {
         given()
             .contentType(ContentType.JSON)
             .body(Map.of())
@@ -104,7 +104,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("카테고리 목록을 조회한다")
-    void retrieve_categories_returnsList() {
+    void retrieveCategoriesReturnsList() {
         // given
         given()
             .contentType(ContentType.JSON)
@@ -135,7 +135,7 @@ class CategoryRestControllerTest {
 
     @Test
     @DisplayName("동일한 이름의 카테고리를 여러 개 생성할 수 있다")
-    void create_duplicateName_allowsMultiple() {
+    void createDuplicateNameAllowsMultiple() {
         // given
         given()
             .contentType(ContentType.JSON)

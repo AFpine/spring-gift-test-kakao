@@ -45,7 +45,7 @@ class ProductRestControllerTest {
 
     @Test
     @DisplayName("유효한 상품을 등록한다")
-    void create_validProduct_returnsCreatedProduct() {
+    void createValidProductReturnsCreatedProduct() {
         // given: 카테고리 생성
         int categoryId = given()
             .contentType(ContentType.JSON)
@@ -79,7 +79,7 @@ class ProductRestControllerTest {
 
     @Test
     @DisplayName("상품 목록을 조회한다")
-    void retrieve_products_returnsList() {
+    void retrieveProductsReturnsList() {
         // given: 카테고리 1개 + 상품 2개 생성
         int categoryId = given()
             .contentType(ContentType.JSON)
