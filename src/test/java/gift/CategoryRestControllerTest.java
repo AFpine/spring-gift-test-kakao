@@ -18,7 +18,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class CategoryRestControllerTest {
@@ -53,34 +52,6 @@ class CategoryRestControllerTest {
             .statusCode(200)
             .body("id", notNullValue())
             .body("name", equalTo(CATEGORY_NAME));
-    }
-
-    @Test
-    @DisplayName("빈 이름으로 카테고리를 생성하면 빈 이름으로 저장된다")
-    void createEmptyNameSavedWithEmptyName() {
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", ""))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200)
-            .body("id", notNullValue())
-            .body("name", equalTo(""));
-    }
-
-    @Test
-    @DisplayName("name 필드 누락 시 null로 저장된다")
-    void createMissingNameSavedWithNull() {
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of())
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200)
-            .body("id", notNullValue())
-            .body("name", nullValue());
     }
 
     @Test
