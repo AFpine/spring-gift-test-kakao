@@ -12,3 +12,17 @@ services:
       interval: 3s
       timeout: 3s
       retries: 10
+
+  app:
+    build: .
+    ports:
+      - "28080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gift_test
+      SPRING_DATASOURCE_USERNAME: test
+      SPRING_DATASOURCE_PASSWORD: test
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+    depends_on:
+      postgres:
+        condition: service_healthy
