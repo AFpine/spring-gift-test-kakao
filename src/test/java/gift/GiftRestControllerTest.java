@@ -89,15 +89,15 @@ class GiftRestControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 옵션으로 선물을 보내면 500 에러가 발생한다")
-    void giveNonExistentOptionReturns500() {
+    @DisplayName("존재하지 않는 옵션으로 선물을 보내면 실패한다")
+    void giveNonExistentOptionFails() {
         giveGift(9999L, 3)
             .statusCode(500);
     }
 
     @Test
-    @DisplayName("재고보다 많은 수량을 요청하면 500 에러가 발생한다")
-    void giveInsufficientStockReturns500() {
+    @DisplayName("재고보다 많은 수량을 요청하면 실패하고 재고가 변하지 않는다")
+    void giveInsufficientStockFailsAndStockUnchanged() {
         giveGift(option.getId(), 15)
             .statusCode(500);
 
@@ -133,6 +133,7 @@ class GiftRestControllerTest {
         // then
         Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
         assertThat(updatedOption.getQuantity()).isEqualTo(0);
+        verify(giftDelivery).deliver(any());
     }
 
     private ValidatableResponse giveGift(long optionId, int quantity) {
