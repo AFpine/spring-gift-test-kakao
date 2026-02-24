@@ -51,7 +51,7 @@ class CategoryRestControllerTest {
     }
 
     @Test
-    @DisplayName("카테고리 목록을 조회한다")
+    @DisplayName("카테고리가 존재할 때 목록을 조회하면 전체 카테고리를 반환한다")
     void retrieveCategoriesReturnsList() {
         // given
         createCategory("교환권").statusCode(200);
@@ -69,7 +69,7 @@ class CategoryRestControllerTest {
     }
 
     @Test
-    @DisplayName("동일한 이름의 카테고리를 여러 개 생성할 수 있다")
+    @DisplayName("동일한 이름으로 카테고리를 여러 개 생성하면 모두 저장된다")
     void createDuplicateNameAllowsMultiple() {
         // given
         createCategory(CATEGORY_NAME).statusCode(200);

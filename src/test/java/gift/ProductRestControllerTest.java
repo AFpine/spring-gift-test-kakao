@@ -49,7 +49,7 @@ class ProductRestControllerTest {
     }
 
     @Test
-    @DisplayName("유효한 상품을 등록한다")
+    @DisplayName("유효한 상품 정보로 등록하면 200 OK와 생성된 상품을 반환한다")
     void createValidProductReturnsCreatedProduct() {
         createProduct("스타벅스 아메리카노", 4500, "https://example.com/coffee.jpg")
             .statusCode(200)
@@ -62,7 +62,7 @@ class ProductRestControllerTest {
     }
 
     @Test
-    @DisplayName("상품 목록을 조회한다")
+    @DisplayName("상품이 존재할 때 목록을 조회하면 전체 상품 목록을 반환한다")
     void retrieveProductsReturnsList() {
         // given
         createProduct("스타벅스 아메리카노", 4500, "https://example.com/americano.jpg").statusCode(200);
