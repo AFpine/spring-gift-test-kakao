@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import io.restassured.response.ValidatableResponse;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -48,28 +49,11 @@ class ProductRestControllerTest {
     @Test
     @DisplayName("유효한 상품을 등록한다")
     void createValidProductReturnsCreatedProduct() {
-        // given: 카테고리 생성
-        int categoryId = given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200)
-            .extract().path("id");
+        // given
+        int categoryId = createCategoryAndGetId(CATEGORY_NAME);
 
-        // when & then: 상품 등록
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of(
-                "name", "스타벅스 아메리카노",
-                "price", 4500,
-                "imageUrl", "https://example.com/coffee.jpg",
-                "categoryId", categoryId
-            ))
-        .when()
-            .post("/api/products")
-        .then()
+        // when & then
+        createProduct("스타벅스 아메리카노", 4500, "https://example.com/coffee.jpg", categoryId)
             .statusCode(200)
             .body("id", notNullValue())
             .body("name", equalTo("스타벅스 아메리카노"))
@@ -82,43 +66,12 @@ class ProductRestControllerTest {
     @Test
     @DisplayName("상품 목록을 조회한다")
     void retrieveProductsReturnsList() {
-        // given: 카테고리 1개 + 상품 2개 생성
-        int categoryId = given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200)
-            .extract().path("id");
+        // given
+        int categoryId = createCategoryAndGetId(CATEGORY_NAME);
+        createProduct("스타벅스 아메리카노", 4500, "https://example.com/americano.jpg", categoryId).statusCode(200);
+        createProduct("스타벅스 카페라떼", 5000, "https://example.com/latte.jpg", categoryId).statusCode(200);
 
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of(
-                "name", "스타벅스 아메리카노",
-                "price", 4500,
-                "imageUrl", "https://example.com/americano.jpg",
-                "categoryId", categoryId
-            ))
-        .when()
-            .post("/api/products")
-        .then()
-            .statusCode(200);
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of(
-                "name", "스타벅스 카페라떼",
-                "price", 5000,
-                "imageUrl", "https://example.com/latte.jpg",
-                "categoryId", categoryId
-            ))
-        .when()
-            .post("/api/products")
-        .then()
-            .statusCode(200);
-
-        // when & then: 목록 조회
+        // when & then
         given()
         .when()
             .get("/api/products")
@@ -128,5 +81,30 @@ class ProductRestControllerTest {
             .body("name", hasItem("스타벅스 아메리카노"))
             .body("name", hasItem("스타벅스 카페라떼"))
             .body("[0].category.id", notNullValue());
+    }
+
+    private int createCategoryAndGetId(String name) {
+        return given()
+            .contentType(ContentType.JSON)
+            .body(Map.of("name", name))
+        .when()
+            .post("/api/categories")
+        .then()
+            .statusCode(200)
+            .extract().path("id");
+    }
+
+    private ValidatableResponse createProduct(String name, int price, String imageUrl, int categoryId) {
+        return given()
+            .contentType(ContentType.JSON)
+            .body(Map.of(
+                "name", name,
+                "price", price,
+                "imageUrl", imageUrl,
+                "categoryId", categoryId
+            ))
+        .when()
+            .post("/api/products")
+        .then();
     }
 }

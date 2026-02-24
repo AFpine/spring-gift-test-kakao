@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
+import io.restassured.response.ValidatableResponse;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -43,12 +44,7 @@ class CategoryRestControllerTest {
     @Test
     @DisplayName("유효한 이름으로 카테고리를 생성하면 200 OK와 생성된 카테고리를 반환한다")
     void createValidNameReturnsCreatedCategory() {
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
+        createCategory(CATEGORY_NAME)
             .statusCode(200)
             .body("id", notNullValue())
             .body("name", equalTo(CATEGORY_NAME));
@@ -58,21 +54,8 @@ class CategoryRestControllerTest {
     @DisplayName("카테고리 목록을 조회한다")
     void retrieveCategoriesReturnsList() {
         // given
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", "교환권"))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200);
-
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", "상품권"))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200);
+        createCategory("교환권").statusCode(200);
+        createCategory("상품권").statusCode(200);
 
         // when & then
         given()
@@ -89,22 +72,10 @@ class CategoryRestControllerTest {
     @DisplayName("동일한 이름의 카테고리를 여러 개 생성할 수 있다")
     void createDuplicateNameAllowsMultiple() {
         // given
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200);
+        createCategory(CATEGORY_NAME).statusCode(200);
 
         // when
-        given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", CATEGORY_NAME))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200);
+        createCategory(CATEGORY_NAME).statusCode(200);
 
         // then
         given()
@@ -113,5 +84,14 @@ class CategoryRestControllerTest {
         .then()
             .statusCode(200)
             .body("size()", equalTo(2));
+    }
+
+    private ValidatableResponse createCategory(String name) {
+        return given()
+            .contentType(ContentType.JSON)
+            .body(Map.of("name", name))
+        .when()
+            .post("/api/categories")
+        .then();
     }
 }
