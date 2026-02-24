@@ -1,9 +1,11 @@
 package gift;
 
+import gift.model.Category;
 import gift.model.CategoryRepository;
 import gift.model.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-import io.restassured.response.ValidatableResponse;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -24,8 +25,6 @@ import static org.hamcrest.Matchers.notNullValue;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductRestControllerTest {
 
-    private static final String CATEGORY_NAME = "교환권";
-
     @LocalServerPort
     private int port;
 
@@ -35,9 +34,12 @@ class ProductRestControllerTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    private Category category;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        category = categoryRepository.save(new Category("교환권"));
     }
 
     @AfterEach
@@ -49,27 +51,22 @@ class ProductRestControllerTest {
     @Test
     @DisplayName("유효한 상품을 등록한다")
     void createValidProductReturnsCreatedProduct() {
-        // given
-        int categoryId = createCategoryAndGetId(CATEGORY_NAME);
-
-        // when & then
-        createProduct("스타벅스 아메리카노", 4500, "https://example.com/coffee.jpg", categoryId)
+        createProduct("스타벅스 아메리카노", 4500, "https://example.com/coffee.jpg")
             .statusCode(200)
             .body("id", notNullValue())
             .body("name", equalTo("스타벅스 아메리카노"))
             .body("price", equalTo(4500))
             .body("imageUrl", equalTo("https://example.com/coffee.jpg"))
-            .body("category.id", equalTo(categoryId))
-            .body("category.name", equalTo(CATEGORY_NAME));
+            .body("category.id", notNullValue())
+            .body("category.name", equalTo("교환권"));
     }
 
     @Test
     @DisplayName("상품 목록을 조회한다")
     void retrieveProductsReturnsList() {
         // given
-        int categoryId = createCategoryAndGetId(CATEGORY_NAME);
-        createProduct("스타벅스 아메리카노", 4500, "https://example.com/americano.jpg", categoryId).statusCode(200);
-        createProduct("스타벅스 카페라떼", 5000, "https://example.com/latte.jpg", categoryId).statusCode(200);
+        createProduct("스타벅스 아메리카노", 4500, "https://example.com/americano.jpg").statusCode(200);
+        createProduct("스타벅스 카페라떼", 5000, "https://example.com/latte.jpg").statusCode(200);
 
         // when & then
         given()
@@ -83,25 +80,14 @@ class ProductRestControllerTest {
             .body("[0].category.id", notNullValue());
     }
 
-    private int createCategoryAndGetId(String name) {
-        return given()
-            .contentType(ContentType.JSON)
-            .body(Map.of("name", name))
-        .when()
-            .post("/api/categories")
-        .then()
-            .statusCode(200)
-            .extract().path("id");
-    }
-
-    private ValidatableResponse createProduct(String name, int price, String imageUrl, int categoryId) {
+    private ValidatableResponse createProduct(String name, int price, String imageUrl) {
         return given()
             .contentType(ContentType.JSON)
             .body(Map.of(
                 "name", name,
                 "price", price,
                 "imageUrl", imageUrl,
-                "categoryId", categoryId
+                "categoryId", category.getId()
             ))
         .when()
             .post("/api/products")
