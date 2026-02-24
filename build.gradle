@@ -36,11 +36,15 @@ tasks.named('test') {
 	exclude 'gift/legacy/**'
 }
 
-tasks.register('dbStart', Exec) {
+tasks.register('dockerBuild', Exec) {
+	commandLine 'docker', 'compose', 'build'
+}
+
+tasks.register('dockerUp', Exec) {
 	commandLine 'docker', 'compose', 'up', '-d', '--wait'
 }
 
-tasks.register('dbStop', Exec) {
+tasks.register('dockerDown', Exec) {
 	commandLine 'docker', 'compose', 'down'
 }
 
@@ -54,5 +58,5 @@ tasks.register('cucumberTest', Test) {
 		}
 	}
 
-	finalizedBy dbStop
+	finalizedBy dockerDown
 }
